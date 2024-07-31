@@ -9,8 +9,10 @@ sudo $pkg_cmd nautilus-python git
 mkdir -p ~/.local/share/nautilus-python
 mkdir -p ~/.local/share/nautilus-python/extensions
 
-git clone ... /tmp/nautilus_extensions
+git clone https://github.com/eduhds/nautilus_extensions.git \
+    /tmp/nautilus_extensions
 
-cp /tmp/nautilus_extensions/nautilus_*.py ~/.local/share/nautilus-python/extensions
+cp /tmp/nautilus_extensions/nautilus_*.py \
+    ~/.local/share/nautilus-python/extensions
 
 echo 'Install complete'

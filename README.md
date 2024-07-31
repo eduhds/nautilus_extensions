@@ -5,7 +5,7 @@ Simple Nautilus extensions.
 ## Install
 
 ```sh
-
+curl -sL https://dub.sh/xp9IXna | bash
 ```
 
 ## Resources
