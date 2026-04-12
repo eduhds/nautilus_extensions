@@ -27,10 +27,6 @@ class ImageUtilsMenuProvider(GObject.GObject, Nautilus.MenuProvider):
                     b64.write(base64_string)
 
     def get_file_items(self, files):
-        for file in files:
-            if file.get_mime_type() not in self.VALID_MIMETYPES:
-                return ()
-
         menu_item_webp = Nautilus.MenuItem(
             name="convert_to_webp", label="✨ Convert to WEBP")
         menu_item_webp.connect('activate', self.convert_to_webp, files)
@@ -39,4 +35,8 @@ class ImageUtilsMenuProvider(GObject.GObject, Nautilus.MenuProvider):
             name="convert_to_base64", label="✨ Convert to Base64")
         menu_item_base64.connect('activate', self.convert_to_base64, files)
 
-        return menu_item_webp, menu_item_base64
+        for file in files:
+            if file.get_mime_type() in self.VALID_MIMETYPES:
+                return menu_item_webp, menu_item_base64
+
+        return ()
