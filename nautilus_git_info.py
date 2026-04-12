@@ -3,6 +3,8 @@ from urllib.parse import urlparse, unquote
 from subprocess import call, STDOUT
 import os
 
+icon_git = 'ne-git'
+
 git_file_status = [
     # ' ',  # unmodified
     'M',  # modified
@@ -55,7 +57,7 @@ class GitInfoExtension(GObject.GObject, Nautilus.InfoProvider):
                 is_root_dir = repo_root == file_path
 
                 if is_root_dir:
-                    file.add_emblem('git')
+                    file.add_emblem(icon_git)
 
                 lines = git_status_lines(file_path, repo_root)
 
