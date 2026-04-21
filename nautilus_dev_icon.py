@@ -55,6 +55,10 @@ icon_rockylinux = 'ne-rockylinux'
 icon_centos = 'ne-centos'
 icon_deepin = 'ne-deepin'
 icon_mint = 'ne-mint'
+icon_clojure = 'ne-clojure'
+icon_groovy = 'ne-groovy'
+icon_openjdk = 'ne-openjdk'
+icon_rust = 'ne-rust'
 
 skip_dirs = ['node_modules', 'vendor']
 
@@ -230,6 +234,12 @@ class DevIconExtension(GObject.GObject, Nautilus.InfoProvider):
                 (None, ('.kt', '.kts'), icon_kotlin),
                 # Perl
                 (None, ('.pl', '.pm'), icon_perl),
+                # Rust
+                (None, ('.rs'), icon_rust),
+                # Groovy
+                (None, ('.groovy'), icon_groovy),
+                # Clojure
+                (None, ('.clj'), icon_clojure),
                 # Docker
                 (('Dockerfile', None), None, icon_docker),
                 (('docker-compose.yml', None), None, icon_docker),
