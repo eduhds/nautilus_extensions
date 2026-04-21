@@ -38,6 +38,23 @@ icon_bash = 'ne-bash'
 icon_windows = 'ne-windows'
 icon_powershell = 'ne-powershell'
 icon_csharp = 'ne-csharp'
+icon_android_studio = 'ne-androidstudio'
+icon_kotlin = 'ne-kotlin'
+icon_docker = 'ne-docker'
+icon_perl = 'ne-perl'
+icon_rubygems = 'ne-rubygems'
+icon_xcode = 'ne-xcode'
+icon_ubuntu = 'ne-ubuntu'
+icon_debian = 'ne-debian'
+icon_fedora = 'ne-fedora'
+icon_alpine = 'ne-alpine'
+icon_opensuse = 'ne-opensuse'
+icon_almalinux = 'ne-almalinux'
+icon_manjaro = 'ne-manjaro'
+icon_rockylinux = 'ne-rockylinux'
+icon_centos = 'ne-centos'
+icon_deepin = 'ne-deepin'
+icon_mint = 'ne-mint'
 
 skip_dirs = ['node_modules', 'vendor']
 
@@ -79,6 +96,27 @@ class DevIconExtension(GObject.GObject, Nautilus.InfoProvider):
                 return
 
             # Linux
+            distros = [
+                ('ubuntu', icon_ubuntu),
+                ('fedora', icon_fedora),
+                ('manjaro', icon_manjaro),
+                ('alpine', icon_alpine),
+                ('deepin', icon_deepin),
+                ('oraclelinux', None),
+                ('mint', icon_mint),
+                ('centos', icon_centos),
+                ('gentoo', None),
+                ('rocklinux', icon_rockylinux),
+                ('debian', icon_debian),
+                ('kali', None),
+                ('almalinux', icon_almalinux),
+                ('opensuse', icon_opensuse),
+                ('archlinux', None)
+            ]
+            for distro in distros:
+                if name.lower() == distro[0]:
+                    file.add_emblem(distro[1] or icon_linux)
+                    return
             if name.lower() == 'linux':
                 file.add_emblem(icon_linux)
                 return
@@ -108,10 +146,11 @@ class DevIconExtension(GObject.GObject, Nautilus.InfoProvider):
                 file.add_emblem(icon_flutter)
                 return
 
-            # composer.json (Composer)
-            target_file = os.path.join(file_path, 'composer.json')
+            # app/src/main/AndroidManifest.xml (Android Studio)
+            target_file = os.path.join(
+                file_path, 'app/src/main/AndroidManifest.xml')
             if os.path.exists(target_file):
-                file.add_emblem(icon_composer)
+                file.add_emblem(icon_android_studio)
                 return
 
             # Node.JS ecossystem
@@ -154,164 +193,75 @@ class DevIconExtension(GObject.GObject, Nautilus.InfoProvider):
             limit = 3
             count = 0
 
-            # .ino (Arduino)
-            ext_files = [f for f in dir_items if f.endswith('.ino')]
-            if len(ext_files) > 0:
-                file.add_emblem(icon_arduino)
-                count += 1
+            languages = [
+                # Arduino
+                (None, ('.ino'), icon_arduino),
+                # C++
+                (None, ('.cpp', '.hpp'), icon_cplusplus),
+                # CSS
+                (None, ('.css'), icon_css),
+                # C
+                (None, ('.c', '.h'), icon_c),
+                # Dart
+                (None, ('.dart'), icon_dart),
+                # React
+                (None, ('.jsx', '.tsx'), icon_react),
+                # Golang
+                (('go.mod', None), ('.go'), icon_go),
+                # HTML
+                (None, ('.html', '.htm'), icon_html5),
+                # JavaScript
+                (None, ('.js', '.cjs', '.mjs'), icon_javascript),
+                # TypeScript
+                (None, ('.ts'), icon_typescript),
+                # Lua
+                (None, ('.lua'), icon_lua),
+                # PHP
+                (('composer.json', icon_composer), ('.php'), icon_php),
+                # Python
+                (None, ('.py', '.pyz'), icon_python),
+                # C#
+                (None, ('.cs'), icon_csharp),
+                # Ruby
+                (('Gemfile', icon_rubygems), ('.rb'), icon_ruby),
+                # Swift
+                (None, ('.swift'), icon_swift),
+                # Kotlin
+                (None, ('.kt', '.kts'), icon_kotlin),
+                # Perl
+                (None, ('.pl', '.pm'), icon_perl),
+                # Docker
+                (('Dockerfile', None), None, icon_docker),
+                (('docker-compose.yml', None), None, icon_docker),
+                # Shell
+                (None, ('.sh'), icon_bash),
+                # PowerShell
+                (None, ('.ps1'), icon_powershell)
+            ]
 
-            if count >= limit:
-                return
+            for lang in languages:
+                # ((target, icon?)?, extensions?, icon)
+                (target, extensions, icon) = lang
 
-            # .cpp, .hpp (C++)
-            ext_files = [f for f in dir_items if f.endswith(('.cpp', '.hpp'))]
-            if len(ext_files) > 0:
-                file.add_emblem(icon_cplusplus)
-                count += 1
+                target_matched = False
 
-            if count >= limit:
-                return
+                if target is not None:
+                    (tfile, ticon) = target
+                    target_file = os.path.join(file_path, tfile)
 
-            # .css (CSS)
-            ext_files = [f for f in dir_items if f.endswith('.css')]
-            if len(ext_files) > 0:
-                file.add_emblem(icon_css)
-                count += 1
+                    if os.path.exists(target_file):
+                        target_matched = True
+                        file.add_emblem(icon)
+                        if ticon is not None:
+                            file.add_emblem(ticon)
+                        count += 1
 
-            if count >= limit:
-                return
+                if not target_matched and extensions is not None:
+                    ext_files = [
+                        f for f in dir_items if f.endswith(extensions)]
+                    if len(ext_files) > 0:
+                        file.add_emblem(icon)
+                        count += 1
 
-            # .c, .h (C)
-            ext_files = [f for f in dir_items if f.endswith(('.c', '.h'))]
-            if len(ext_files) > 0:
-                file.add_emblem(icon_c)
-                count += 1
-
-            if count >= limit:
-                return
-
-            # .dart (Dart)
-            ext_files = [f for f in dir_items if f.endswith('.dart')]
-            if len(ext_files) > 0:
-                file.add_emblem(icon_dart)
-                count += 1
-
-            if count >= limit:
-                return
-
-            # .jsx, .tsx (React/React Native)
-            ext_files = [f for f in dir_items if f.endswith(('.jsx', '.tsx'))]
-            if len(ext_files) > 0:
-                file.add_emblem(icon_react)
-                count += 1
-
-            if count >= limit:
-                return
-
-            # go.mod or .go (Golang)
-            target_file = os.path.join(file_path, 'go.mod')
-            ext_files = [f for f in dir_items if f.endswith('.go')]
-            if os.path.exists(target_file) or len(ext_files) > 0:
-                file.add_emblem(icon_go)
-                count += 1
-
-            if count >= limit:
-                return
-
-            # .html, .htm (HTML)
-            ext_files = [f for f in dir_items if f.endswith(('.html', '.htm'))]
-            if len(ext_files) > 0:
-                file.add_emblem(icon_html5)
-                count += 1
-
-            if count >= limit:
-                return
-
-            # .js, .cjs, .mjs (JavaScript)
-            ext_files = [f for f in dir_items if f.endswith(
-                ('.js', '.cjs', '.mjs'))]
-            if len(ext_files) > 0:
-                file.add_emblem(icon_javascript)
-                count += 1
-
-            if count >= limit:
-                return
-
-            # .ts (TypeScript)
-            ext_files = [f for f in dir_items if f.endswith('.ts')]
-            if len(ext_files) > 0:
-                file.add_emblem(icon_typescript)
-                count += 1
-
-            if count >= limit:
-                return
-
-            # .lua (Lua)
-            ext_files = [f for f in dir_items if f.endswith('.lua')]
-            if len(ext_files) > 0:
-                file.add_emblem(icon_lua)
-                count += 1
-
-            if count >= limit:
-                return
-
-            # .php (PHP)
-            ext_files = [f for f in dir_items if f.endswith('.php')]
-            if len(ext_files) > 0:
-                file.add_emblem(icon_php)
-                count += 1
-
-            if count >= limit:
-                return
-
-            # .py (Python)
-            ext_files = [f for f in dir_items if f.endswith('.py')]
-            if len(ext_files) > 0:
-                file.add_emblem(icon_python)
-                count += 1
-
-            if count >= limit:
-                return
-
-            # .cs (C#)
-            ext_files = [f for f in dir_items if f.endswith('.cs')]
-            if len(ext_files) > 0:
-                file.add_emblem(icon_csharp)
-                count += 1
-
-            if count >= limit:
-                return
-
-            # Gemfile or .rb (Ruby)
-            target_file = os.path.join(file_path, 'Gemfile')
-            ext_files = [f for f in dir_items if f.endswith('.rb')]
-            if os.path.exists(target_file) or len(ext_files) > 0:
-                file.add_emblem(icon_ruby)
-                count += 1
-
-            if count >= limit:
-                return
-
-            # Package.swift or .swift (Swift)
-            target_file = os.path.join(file_path, 'Package.swift')
-            ext_files = [f for f in dir_items if f.endswith('.swift')]
-            if os.path.exists(target_file) or len(ext_files) > 0:
-                file.add_emblem(icon_swift)
-                count += 1
-
-            if count >= limit:
-                return
-
-            # .sh (Shell)
-            ext_files = [f for f in dir_items if f.endswith('.sh')]
-            if len(ext_files) > 0:
-                file.add_emblem(icon_bash)
-                count += 1
-
-            if count >= limit:
-                return
-
-            # .ps1 (PowerShell)
-            ext_files = [f for f in dir_items if f.endswith('.ps1')]
-            if len(ext_files) > 0:
-                file.add_emblem(icon_powershell)
+                if count >= limit:
+                    break
