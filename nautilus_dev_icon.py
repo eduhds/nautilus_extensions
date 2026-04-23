@@ -59,6 +59,7 @@ icon_clojure = 'ne-clojure'
 icon_groovy = 'ne-groovy'
 icon_openjdk = 'ne-openjdk'
 icon_rust = 'ne-rust'
+icon_snapcraft = 'ne-snapcraft'
 
 skip_dirs = ['node_modules', 'vendor']
 
@@ -128,6 +129,10 @@ class DevIconExtension(GObject.GObject, Nautilus.InfoProvider):
             # Windows
             if name.lower() == 'windows':
                 file.add_emblem(icon_windows)
+                return
+
+            if name.lower() == 'snap':
+                file.add_emblem(icon_snapcraft)
                 return
 
             # Frameworks
