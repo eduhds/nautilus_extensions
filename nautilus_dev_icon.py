@@ -60,6 +60,8 @@ icon_groovy = 'ne-groovy'
 icon_openjdk = 'ne-openjdk'
 icon_rust = 'ne-rust'
 icon_snapcraft = 'ne-snapcraft'
+icon_julia = 'ne-julia'
+icon_vala = 'ne-vala'
 
 skip_dirs = ['node_modules', 'vendor']
 
@@ -245,6 +247,10 @@ class DevIconExtension(GObject.GObject, Nautilus.InfoProvider):
                 (None, ('.groovy'), icon_groovy),
                 # Clojure
                 (None, ('.clj'), icon_clojure),
+                # Julia
+                (None, ('.jl'), icon_julia),
+                # Vala
+                (None, ('.vala'), icon_vala),
                 # Docker
                 (('Dockerfile', None), None, icon_docker),
                 (('docker-compose.yml', None), None, icon_docker),
