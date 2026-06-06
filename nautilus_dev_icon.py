@@ -81,130 +81,68 @@ class DevIconExtension(GObject.GObject, Nautilus.InfoProvider):
             if name.startswith('.'):
                 return
 
-            file_path = unquote(urlparse(file.get_uri()).path)
-            dir_items = [f for f in os.listdir(
-                file_path) if os.path.isfile(os.path.join(file_path, f))]
-
             # Directory name
 
-            # Android
-            if name.lower() == 'android':
-                file.add_emblem(icon_android)
-                return
-
-            # macOS
-            if name.lower() == 'macos':
-                file.add_emblem(icon_apple)
-                return
-
-            # iOS
-            if name.lower() == 'ios':
-                file.add_emblem(icon_ios)
-                return
-
-            # Linux
-            distros = [
+            commom_names = [
+                # Android
+                ('android', icon_android),
+                # macOS
+                ('macos', icon_apple),
+                # iOS
+                ('ios', icon_ios),
+                # Linux
+                ('linux', icon_linux),
                 ('ubuntu', icon_ubuntu),
                 ('fedora', icon_fedora),
                 ('manjaro', icon_manjaro),
                 ('alpine', icon_alpine),
                 ('deepin', icon_deepin),
-                ('oraclelinux', None),
                 ('mint', icon_mint),
                 ('centos', icon_centos),
-                ('gentoo', None),
                 ('rocklinux', icon_rockylinux),
                 ('debian', icon_debian),
-                ('kali', None),
                 ('almalinux', icon_almalinux),
                 ('opensuse', icon_opensuse),
-                ('archlinux', None)
+                # Windows
+                ('windows', icon_windows),
+                ('snap', icon_snapcraft)
             ]
-            for distro in distros:
-                if name.lower() == distro[0]:
-                    file.add_emblem(distro[1] or icon_linux)
+
+            for c_name in commom_names:
+                if name.lower() == c_name[0]:
+                    file.add_emblem(c_name[1])
                     return
-            if name.lower() == 'linux':
-                file.add_emblem(icon_linux)
-                return
 
-            # Windows
-            if name.lower() == 'windows':
-                file.add_emblem(icon_windows)
-                return
+            file_path = unquote(urlparse(file.get_uri()).path)
+            dir_items = [f for f in os.listdir(
+                file_path) if os.path.isfile(os.path.join(file_path, f))]
 
-            if name.lower() == 'snap':
-                file.add_emblem(icon_snapcraft)
-                return
-
-            # Frameworks
-
-            # deno.json (Deno)
-            target_file = os.path.join(file_path, 'deno.json')
-            if os.path.exists(target_file):
-                file.add_emblem(icon_deno)
-                return
-
-            # bun.lockb (Bun)
-            target_file = os.path.join(file_path, 'bun.lockb')
-            if os.path.exists(target_file):
-                file.add_emblem(icon_bun)
-                return
-
-            # pubspec.yaml (Flutter)
-            target_file = os.path.join(file_path, 'pubspec.yaml')
-            if os.path.exists(target_file):
-                file.add_emblem(icon_flutter)
-                return
-
-            # app/src/main/AndroidManifest.xml (Android Studio)
-            target_file = os.path.join(
-                file_path, 'app/src/main/AndroidManifest.xml')
-            if os.path.exists(target_file):
-                file.add_emblem(icon_android_studio)
-                return
-
-            # Node.JS ecossystem
-            is_node = False
-
-            # metro.config.js (React Native)
-            target_file = os.path.join(file_path, 'metro.config.js')
-            if os.path.exists(target_file):
-                file.add_emblem(icon_react)
-                is_node = True
-
-            # forge.config.js (Electron)
-            target_file = os.path.join(file_path, 'forge.config.js')
-            if not is_node and os.path.exists(target_file):
-                file.add_emblem(icon_electron)
-                is_node = True
-
-            # package.json (Node.js)
-            target_file = os.path.join(file_path, 'package.json')
-            if not is_node and os.path.exists(target_file):
-                file.add_emblem(icon_nodejs)
-                is_node = True
-
-            # Package manager
-            if is_node:
-                # NPM
-                if 'package-lock.json' in dir_items:
-                    file.add_emblem(icon_npm)
-                # Yarn
-                if 'yarn.lock' in dir_items:
-                    file.add_emblem(icon_yarn)
-                # Pnpm
-                if 'pnpm-lock.yaml' in dir_items:
-                    file.add_emblem(icon_pnpm)
-
-                return
-
-            # File extensions
+            # Directory content
 
             limit = 3
             count = 0
 
-            languages = [
+            tecnologies = [
+                # Deno
+                ('deno.json', None, icon_deno),
+                # Bun
+                ('bun.lock', None, icon_bun),
+                # Flutter
+                ('pubspec.yaml', None, icon_flutter),
+                # Android Studio
+                ('app/src/main/AndroidManifest.xml', None, icon_android_studio),
+                # Node.JS
+                ('package.json', None, icon_nodejs),
+                # React Native
+                ('metro.config.js', None, icon_react),
+                # Electron
+                ('forge.config.js', None, icon_electron),
+                # NPM
+                ('package-lock.json', None, icon_npm),
+                # Yarn
+                ('yarn.lock', None, icon_yarn),
+                # Pnpm
+                ('pnpm-lock.yaml', None, icon_pnpm),
                 # Arduino
                 (None, ('.ino'), icon_arduino),
                 # C++
@@ -218,7 +156,7 @@ class DevIconExtension(GObject.GObject, Nautilus.InfoProvider):
                 # React
                 (None, ('.jsx', '.tsx'), icon_react),
                 # Golang
-                (('go.mod', None), ('.go'), icon_go),
+                ('go.mod', ('.go'), icon_go),
                 # HTML
                 (None, ('.html', '.htm'), icon_html5),
                 # JavaScript
@@ -228,13 +166,17 @@ class DevIconExtension(GObject.GObject, Nautilus.InfoProvider):
                 # Lua
                 (None, ('.lua'), icon_lua),
                 # PHP
-                (('composer.json', icon_composer), ('.php'), icon_php),
+                ('composer.json', ('.php'), icon_php),
+                # Composer
+                ('composer.json', None, icon_composer),
                 # Python
                 (None, ('.py', '.pyz'), icon_python),
                 # C#
                 (None, ('.cs'), icon_csharp),
                 # Ruby
-                (('Gemfile', icon_rubygems), ('.rb'), icon_ruby),
+                (None, ('.rb'), icon_ruby),
+                # RubyGems
+                ('Gemfile', None, icon_rubygems),
                 # Swift
                 (None, ('.swift'), icon_swift),
                 # Kotlin
@@ -252,37 +194,27 @@ class DevIconExtension(GObject.GObject, Nautilus.InfoProvider):
                 # Vala
                 (None, ('.vala'), icon_vala),
                 # Docker
-                (('Dockerfile', None), None, icon_docker),
-                (('docker-compose.yml', None), None, icon_docker),
+                ('Dockerfile', None, icon_docker),
+                ('docker-compose.yml', None, icon_docker),
                 # Shell
                 (None, ('.sh'), icon_bash),
                 # PowerShell
                 (None, ('.ps1'), icon_powershell)
             ]
 
-            for lang in languages:
-                # ((target, icon?)?, extensions?, icon)
+            for lang in tecnologies:
+                # (target?, extensions?, icon)
                 (target, extensions, icon) = lang
 
-                target_matched = False
+                has_target = target is not None and os.path.exists(
+                    os.path.join(file_path, target))
 
-                if target is not None:
-                    (tfile, ticon) = target
-                    target_file = os.path.join(file_path, tfile)
+                ext_files = [
+                    f for f in dir_items if f.endswith(extensions)] if extensions is not None else []
 
-                    if os.path.exists(target_file):
-                        target_matched = True
-                        file.add_emblem(icon)
-                        if ticon is not None:
-                            file.add_emblem(ticon)
-                        count += 1
-
-                if not target_matched and extensions is not None:
-                    ext_files = [
-                        f for f in dir_items if f.endswith(extensions)]
-                    if len(ext_files) > 0:
-                        file.add_emblem(icon)
-                        count += 1
+                if has_target or len(ext_files) > 0:
+                    file.add_emblem(icon)
+                    count += 1
 
                 if count >= limit:
                     break
