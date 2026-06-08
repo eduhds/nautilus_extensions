@@ -105,6 +105,7 @@ class DevIconExtension(GObject.GObject, Nautilus.InfoProvider):
                 ('opensuse', icon_opensuse),
                 # Windows
                 ('windows', icon_windows),
+                # Others
                 ('snap', icon_snapcraft)
             ]
 
@@ -113,93 +114,95 @@ class DevIconExtension(GObject.GObject, Nautilus.InfoProvider):
                     file.add_emblem(c_name[1])
                     return
 
+            # Directory content
+
             file_path = unquote(urlparse(file.get_uri()).path)
             dir_items = [f for f in os.listdir(
                 file_path) if os.path.isfile(os.path.join(file_path, f))]
-
-            # Directory content
 
             limit = 3
             count = 0
 
             tecnologies = [
-                # Deno
-                ('deno.json', None, icon_deno),
-                # Bun
-                ('bun.lock', None, icon_bun),
-                # Flutter
-                ('pubspec.yaml', None, icon_flutter),
                 # Android Studio
                 ('app/src/main/AndroidManifest.xml', None, icon_android_studio),
-                # Node.JS
-                ('package.json', None, icon_nodejs),
-                # React Native
-                ('metro.config.js', None, icon_react),
-                # Electron
-                ('forge.config.js', None, icon_electron),
-                # NPM
-                ('package-lock.json', None, icon_npm),
-                # Yarn
-                ('yarn.lock', None, icon_yarn),
-                # Pnpm
-                ('pnpm-lock.yaml', None, icon_pnpm),
                 # Arduino
                 (None, ('.ino'), icon_arduino),
-                # C++
-                (None, ('.cpp', '.hpp'), icon_cplusplus),
-                # CSS
-                (None, ('.css'), icon_css),
+                # Bun
+                ('bun.lock', None, icon_bun),
                 # C
                 (None, ('.c', '.h'), icon_c),
-                # Dart
-                (None, ('.dart'), icon_dart),
-                # React
-                (None, ('.jsx', '.tsx'), icon_react),
-                # Golang
-                ('go.mod', ('.go'), icon_go),
-                # HTML
-                (None, ('.html', '.htm'), icon_html5),
-                # JavaScript
-                (None, ('.js', '.cjs', '.mjs'), icon_javascript),
-                # TypeScript
-                (None, ('.ts'), icon_typescript),
-                # Lua
-                (None, ('.lua'), icon_lua),
-                # PHP
-                ('composer.json', ('.php'), icon_php),
-                # Composer
-                ('composer.json', None, icon_composer),
-                # Python
-                (None, ('.py', '.pyz'), icon_python),
+                # C++
+                (None, ('.cpp', '.hpp'), icon_cplusplus),
                 # C#
                 (None, ('.cs'), icon_csharp),
+                # Clojure
+                (None, ('.clj'), icon_clojure),
+                # CSS
+                (None, ('.css'), icon_css),
+                # Composer
+                ('composer.json', None, icon_composer),
+                # Dart
+                (None, ('.dart'), icon_dart),
+                # Deno
+                ('deno.json', None, icon_deno),
+                # Docker
+                ('Dockerfile', None, icon_docker),
+                ('docker-compose.yml', None, icon_docker),
+                # Electron
+                ('forge.config.js', None, icon_electron),
+                # Flutter
+                ('pubspec.yaml', None, icon_flutter),
+                # Golang
+                ('go.mod', ('.go'), icon_go),
+                # Groovy
+                (None, ('.groovy'), icon_groovy),
+                # HTML
+                (None, ('.html', '.htm'), icon_html5),
+                # Java
+                (None, ('.java', '.jar', '.class'), icon_openjdk),
+                # JavaScript
+                (None, ('.js', '.cjs', '.mjs'), icon_javascript),
+                # Julia
+                (None, ('.jl'), icon_julia),
+                # Kotlin
+                (None, ('.kt', '.kts'), icon_kotlin),
+                # Lua
+                (None, ('.lua'), icon_lua),
+                # Node.JS
+                ('package.json', None, icon_nodejs),
+                # NPM
+                ('package-lock.json', None, icon_npm),
+                # Perl
+                (None, ('.pl', '.pm'), icon_perl),
+                # PHP
+                ('composer.json', ('.php'), icon_php),
+                # PowerShell
+                (None, ('.ps1'), icon_powershell),
+                # Pnpm
+                ('pnpm-lock.yaml', None, icon_pnpm),
+                # Python
+                (None, ('.py', '.pyz'), icon_python),
+                # React
+                (None, ('.jsx', '.tsx'), icon_react),
+                # React Native
+                ('metro.config.js', None, icon_react),
                 # Ruby
                 (None, ('.rb'), icon_ruby),
                 # RubyGems
                 ('Gemfile', None, icon_rubygems),
-                # Swift
-                (None, ('.swift'), icon_swift),
-                # Kotlin
-                (None, ('.kt', '.kts'), icon_kotlin),
-                # Perl
-                (None, ('.pl', '.pm'), icon_perl),
                 # Rust
                 (None, ('.rs'), icon_rust),
-                # Groovy
-                (None, ('.groovy'), icon_groovy),
-                # Clojure
-                (None, ('.clj'), icon_clojure),
-                # Julia
-                (None, ('.jl'), icon_julia),
-                # Vala
-                (None, ('.vala'), icon_vala),
-                # Docker
-                ('Dockerfile', None, icon_docker),
-                ('docker-compose.yml', None, icon_docker),
                 # Shell
                 (None, ('.sh'), icon_bash),
-                # PowerShell
-                (None, ('.ps1'), icon_powershell)
+                # Swift
+                (None, ('.swift'), icon_swift),
+                # TypeScript
+                (None, ('.ts'), icon_typescript),
+                # Vala
+                (None, ('.vala'), icon_vala),
+                # Yarn
+                ('yarn.lock', None, icon_yarn)
             ]
 
             for lang in tecnologies:
