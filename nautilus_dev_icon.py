@@ -137,7 +137,7 @@ class DevIconExtension(GObject.GObject, Nautilus.InfoProvider):
                 # C#
                 (None, ('.cs'), icon_csharp),
                 # Clojure
-                (None, ('.clj'), icon_clojure),
+                (None, ('.clj', '.cljs'), icon_clojure),
                 # CSS
                 (None, ('.css'), icon_css),
                 # Composer
